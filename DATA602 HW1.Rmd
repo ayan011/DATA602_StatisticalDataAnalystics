@@ -1,0 +1,281 @@
+---
+title: "DATA602 Assignment1"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+date: "2022-09-21"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Question 1
+
+```{r}
+#part a
+p=0.6
+p_1a=p*p
+p_1a
+```
+
+```{r}
+#part b
+p_1b=(1-p)^2
+p_1b
+```
+
+```{r}
+#part c
+p1_c=2*p*(1-p)+p*p
+p1_c
+```
+
+```{r}
+#part d
+
+```
+
+
+##Question 2
+
+```{r}
+#Step 1
+nsims=1000
+outcome=numeric(nsims)
+for(i in 1:nsims){ #we are going to perform the body of the loop 1000 times
+  outcome[i] = sample(c(1,2,3,4,5,6), 1, replace=FALSE) #stores the outcome of the ith toss in position i of outcome
+  }  #close the for-loop
+simresult = data.frame(outcome) #creates a data frame with two columns
+head(simresult,3)
+tail(simresult,3)
+```
+
+```{r}
+#Step 2
+for(i in 1:nsims){ #we are going to perform the body of the loop 1000 times
+  outcome[i] = sample(c(1,2,3,4,5,6), 1, replace=FALSE) #stores the outcome of the ith toss in position i of outcome
+  }  #close the for-loop
+simresult = data.frame(outcome) #creates a data frame with two columns
+head(simresult,3)  #shows the first three rows of the data frame, outcome of each die toss in column 2
+tail(simresult,3)  #shows the last three rows of the data frame, die toss outcome in column 2
+```
+
+```{r}
+#Step 3
+
+```
+
+##Question 3
+```{r}
+#The sample space of this question is choosing 5 cards from a deck of 20 cards:
+omega3=choose(20, 5)
+#part a
+
+#p=#A/#sample space
+#number of A is 4 since there are four suits
+p3a=4/omega3
+p3a
+```
+The probability of straight flush is 0.0003.
+
+```{r}
+#part b
+#compute the number of A: for example, start from heart:C(5,1), then 
+A3b=choose(5,1)*choose(4, 3)*choose(4,2)*choose(4, 1)*choose(4,1)
+p3b=A3b/omega3
+p3b
+```
+The probability of three-of-a-kind is 0.1238.
+
+```{r}
+#part c
+#
+A3c=choose(3,1)*choose(4,1)*choose(12,2)+choose(3,2)*choose(4,2)*choose(12,1)
+p3c=A3c/omega3
+p3c
+```
+The probability that observes two Aces and two diamonds is 0.0650
+
+##Question 4
+
+Let AA denote the event flying Airline AA, UA denote the event flying Airline UA, D denote the event flying Airline D; and M denotes the event missing connecting flight.
+In this question, we are computing the conditional probability:
+$p(flying\ Airline\ UA| missing\ connecting\ flights)=p(UA|M)=\frac {p(UA\cap M)} {p(M)}$
+thus we need to find $p(M\cap A)$ and $p(UA)$:
+```{r}
+#First compute the probabilities of event that flying three airlines respectively:
+paa=0.15
+pua=0.85/4
+pd=3*pua
+pua
+pd
+```
+Thus $p(AA)=0.15$, $p(UA)=0.2125$ and $p(D)=0.6375$.
+And we know $p(M|AA)=0.15$, $p=(M|UA)=0.3$ and $p=(M|D)=0.1$, we can use total probability theorem to calculate $p(M): p(M)=\sum_{n}p(M|AIRLINE_i)p(AIRLINE_i)$
+```{r}
+pm=0.15*0.15+0.2125*0.3+0.6375*0.1
+pm
+```
+Now we know $p(M)=0.235$, and $p(M\cap UA)=p(UA)*p(M|UA)$:
+```{r}
+pmua=0.3*0.2125
+pmua
+```
+Finally we can compute the conditional probability: $p(UA|M)=\frac {p(UA\cap) M}{p(M)}$
+```{r}
+puam=pmua/pm
+puam
+```
+The probability that the executive called from Chicago given that the group has missed the connecting flight is 0.425.
+
+
+##Question 5
+```{r}
+#part a
+den5=function(x)(2/(3^(x+1)))
+xvalues=0:15
+```
+
+```{r}
+# part b
+integrate(den5, lower=3, upper=15)
+```
+
+```{r}
+#part c
+mean5=integrate(function(x)(2*x/(3^(x+1))), lower=0, upper=15)
+mean5=mean5$value
+mean5
+```
+
+```{r}
+# part d
+square5=integrate(function(x)((2*x^2)/(3^(x+1))), lower=0, upper=15)
+square5=(square5$value)
+sd5=square5-mean5^2
+sd5
+```
+
+```{r}
+#part e
+p5e=integrate(function(x)(2*x/(3^(x+1))), lower=mean5-sd5, upper=mean5+sd5)
+p5e
+```
+
+##Question 8
+
+```{r}
+mean8=1.89
+sd8=0.05
+```
+
+We are computing the probability: $P(1.83<x<1.91)$
+```{r}
+pnorm(1.91, mean8, sd8)-pnorm(1.83, mean8, sd8)
+```
+The probability that the amount of soft-drink dispensed into this bottle is between 1.83 and 1.91 litres is 0.5404.
+
+```{r}
+#part b
+quantile(dnorm(mean8, sd8),0.9)
+```
+The 90th-percentile is 0.0734
+
+```{r}
+#part c
+1-pnorm(2, mean8, sd8)
+```
+The proportion of all 2-litre bottles will be filled to overflow is 0.0139.
+
+First we need to compute the probability that bottles will have less than 1.85 L of soft drink: $p(x<1.85)$
+```{r}
+#part d
+p8d=pnorm(1.85, mean8, sd8)
+```
+Since we picked 50 bottles randomly, it's a binomial distribution: $Y\sim Binomal(50,\ p8d)$, we can use it to calculate $P(5\leq x \leq 10)$
+```{r}
+pbinom(10, size=50, prob=p8d)-pbinom(5, size=50, prob=p8d)
+```
+The probability that between 5 and 10 of these bottles will have less than 1.85 litres of soft-drink is 0.4691.
+
+
+##Question 9
+```{r}
+gss=read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/GSS2002.csv")
+head(gss, 5)
+```
+
+##Question 10
+
+```{r}
+library(ISLR)
+head(Default, 4)
+```
+
+```{r}
+#part a
+ggplot(data=Default, aes(x = balance, y = income, color=student)) + geom_point(size=2, position="jitter") + xlab("Balance") + ylab("Income") + ggtitle("Scatterplot of Annual Income to Credit Card Balancing")
+```
+
+```{r}
+#part b
+ggplot(data=filter(Default, student =="Yes" | student=="No" ), aes(x = student, y = balance)) + geom_boxplot(color = "orange", fill="blue", na.rm=TRUE) + coord_flip() + xlab("Balance Owing") + ylab("Student") + ggtitle("Boxplots of Balance Owing")
+```
+
+```{r}
+#part c
+#mean
+mean10=mean(Default$balance)
+mean10
+#median
+median10=median(Default$balance)
+median10
+#sd
+sd10=sqrt(var(Default$balance))
+sd10
+#5th and 95th percentiles
+quantiles10=quantile(Default$balance, c(0.05, 0.95))
+quantiles10
+```
+
+The sample mean is 835.3749, the sample median is 823.637, the sample standard deviation is 483.715, the 5th and 95th percentiles are 0.4247 and 1665.96258 respectively.
+
+##Question 11
+```{r}
+data11=read.csv('Data602Assignment1Question11.csv')
+head(data11, 5)
+```
+
+
+```{r}
+#part a
+ggplot(data11, aes(x = Delivery_time))
+```
+
+```{r}
+#part b
+#sample mean
+mean11=mean(data11$Delivery_time)
+mean11
+#sample median
+median11=median(data11$Delivery_time)
+median11
+# sample sd
+var11=var(data11$Delivery_time)
+sd11=sqrt(var11)
+sd11
+#percentiles
+quantile11=quantile(data11$Delivery_time, c(0.25, 0.75, 0.99))
+```
+The sample mean is 5.6875, the sample median is 5.775, the sample standard deviation is 1.5804, the first,  third and 99th percentiles are 4.75, 6.565 and 7.9778 respectively.
+
+```{r}
+#part c
+
+```
+
+
+
+
